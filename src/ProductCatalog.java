@@ -5,9 +5,7 @@ import java.io.InputStream;
 import java.sql.*;
 import javax.imageio.ImageIO;
 
-/**
- * ProductCatalog class allows users to view products and add them to their cart.
- */
+
 public class ProductCatalog extends JFrame {
 
     // Declare all the necessary components
