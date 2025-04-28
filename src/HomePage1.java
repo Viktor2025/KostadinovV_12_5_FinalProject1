@@ -21,7 +21,7 @@ public class HomePage1 extends JFrame {
     public HomePage1() {
         setTitle("Home Page");
         setContentPane(panel1);
-        setSize(400, 400);
+        setSize(500, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
