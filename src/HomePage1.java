@@ -15,6 +15,9 @@ public class HomePage1 extends JFrame {
     private JLabel pricelabel;
     private JLabel message;
 
+    /**
+     * Constructor to set up the Home Page UI.
+     */
     public HomePage1() {
         setTitle("Home Page");
         setContentPane(panel1);
@@ -22,22 +25,31 @@ public class HomePage1 extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // ✅ Load labels and images from database
+        initializeComponents();
+        setVisible(true);
+    }
+
+    /**
+     * Initializes components like loading labels and setting button actions.
+     */
+    private void initializeComponents() {
+        // Load labels and images dynamically
         loadHomePageLabelsFromDB();
 
-        // ✅ Button to view catalog
+        // Button action to view catalog
         VIEWCATALOGButton.addActionListener(e -> {
             dispose();
             new ProductCatalog();
         });
-
-        setVisible(true);
     }
 
-    // ✅ Load labels and images method
+    /**
+     * Loads labels and images from the database for the homepage.
+     */
     private void loadHomePageLabelsFromDB() {
+        String query = "SELECT label_name, label_text, image_data FROM homepage_labels";
         try (Connection conn = Connect.connect();
-             PreparedStatement stmt = conn.prepareStatement("SELECT label_name, label_text, image_data FROM homepage_labels");
+             PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -45,15 +57,7 @@ public class HomePage1 extends JFrame {
                 String labelText = rs.getString("label_text");
                 InputStream imgData = rs.getBinaryStream("image_data");
 
-                switch (labelName) {
-                    case "Title" -> setLabelContent(Title, labelText, imgData);
-                    case "UnderTitle" -> setLabelContent(UnderTitle, labelText, imgData);
-                    case "picture1" -> setLabelContent(picture1, labelText, imgData);
-                    case "picture2" -> setLabelContent(picture2, labelText, imgData);
-                    case "pricelabel" -> setLabelContent(pricelabel, labelText, imgData);
-                    case "message" -> setLabelContent(message, labelText, imgData);
-                    default -> System.out.println("⚠️ Unknown label found: " + labelName);
-                }
+                assignLabelContent(labelName, labelText, imgData);
             }
 
         } catch (SQLException e) {
@@ -61,7 +65,32 @@ public class HomePage1 extends JFrame {
         }
     }
 
-    // ✅ Helper method to set text and icon
+    /**
+     * Assigns text and images to the appropriate labels based on label name.
+     *
+     * @param labelName name of the label
+     * @param text text content
+     * @param imgData image input stream
+     */
+    private void assignLabelContent(String labelName, String text, InputStream imgData) {
+        switch (labelName) {
+            case "Title" -> setLabelContent(Title, text, imgData);
+            case "UnderTitle" -> setLabelContent(UnderTitle, text, imgData);
+            case "picture1" -> setLabelContent(picture1, text, imgData);
+            case "picture2" -> setLabelContent(picture2, text, imgData);
+            case "pricelabel" -> setLabelContent(pricelabel, text, imgData);
+            case "message" -> setLabelContent(message, text, imgData);
+            default -> System.out.println("⚠️ Unknown label found: " + labelName);
+        }
+    }
+
+    /**
+     * Helper method to apply both text and images to JLabel.
+     *
+     * @param label JLabel to update
+     * @param text Text to set
+     * @param imgData Image input stream
+     */
     private void setLabelContent(JLabel label, String text, InputStream imgData) {
         if (label == null) return;
 
@@ -75,7 +104,7 @@ public class HomePage1 extends JFrame {
                     Image scaled = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
                     label.setIcon(new ImageIcon(scaled));
 
-                    // ⚡ Force layout update
+                    // Force layout update
                     label.setPreferredSize(new Dimension(150, 150));
                     label.revalidate();
                     label.repaint();
