@@ -8,7 +8,7 @@ public class Login extends JFrame {
     private JPasswordField passwordField1; // Password input
     private JButton loginButton;
     private JButton registerButton;
-    private JLabel email;
+    private JLabel emailField;
     private JLabel password;
     private JLabel notAMember;
     private JLabel title;
@@ -75,7 +75,7 @@ public class Login extends JFrame {
 
                 switch (name) {
                     case "title" -> title.setText(text);
-                    case "email" -> email.setText(text);
+                    case "email" -> emailField.setText(text);
                     case "password" -> password.setText(text);
                     case "notAMember" -> notAMember.setText(text);
                 }
